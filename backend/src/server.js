@@ -15,11 +15,16 @@ const allowedOrigins = [
 app.use(
     cors({
         origin: function (origin, callback) {
-            if (!origin || allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error("Not allowed by CORS"));
+            if (
+                !origin ||
+                allowedOrigins.includes(origin) ||
+                origin.endsWith(".vercel.app")
+            ) {
+                return callback(null, true);
             }
+
+            console.log("Blocked by CORS:", origin);
+            return callback(new Error("Not allowed by CORS"));
         },
         credentials: true,
     })
@@ -27,11 +32,13 @@ app.use(
 
 app.use(express.json());
 
+const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
-app.use("/api/jobs", jobRoutes);
-
+const eventRoutes = require("./routes/eventRoutes");
+const communityRoutes = require("./routes/communityRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
     res.send("MSU Student App API is running");
@@ -41,27 +48,24 @@ app.get("/api/health", (req, res) => {
     res.json({ message: "Backend is healthy" });
 });
 
-const eventRoutes = require("./routes/eventRoutes");
-app.use("/api/events", eventRoutes);
-
-const communityRoutes = require("./routes/communityRoutes");
-app.use("/api/community", communityRoutes);
-
-const authRoutes = require("./routes/authRoutes");
 app.use("/api/auth", authRoutes);
-
-const notificationRoutes = require("./routes/notificationRoutes");
+app.use("/api/jobs", jobRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/community", communityRoutes);
 app.use("/api/notifications", notificationRoutes);
-
-const chatRoutes = require("./routes/chatRoutes");
 app.use("/api/chat", chatRoutes);
+app.use("/api/admin", adminRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5050;
 
 mongoose
     .connect(process.env.MONGODB_URI)
-    .then(() => console.log("MongoDB connected"))
-    .catch((error) => console.log("MongoDB connection error:", error.message));
+    .then(() => {
+        console.log("MongoDB connected");
+    })
+    .catch((error) => {
+        console.log("MongoDB connection error:", error.message);
+    });
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
