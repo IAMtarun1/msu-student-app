@@ -14,6 +14,8 @@ import Notifications from "./pages/Notifications";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
+import Admin from "./pages/Admin";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
     const [showConfirm, setShowConfirm] = useState(false);
@@ -55,7 +57,14 @@ function App() {
                             <Route path="/login" element={<Login />} />
                             <Route path="/register" element={<Register />} />
 
-                            <Route path="/jobs" element={<ProtectedRoute><Jobs /></ProtectedRoute>} />
+                            <Route
+                                path="/admin"
+                                element={
+                                    <AdminRoute>
+                                        <Admin />
+                                    </AdminRoute>
+                                }
+                            />                            <Route path="/jobs" element={<ProtectedRoute><Jobs /></ProtectedRoute>} />
                             <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
                             <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
                             <Route path="/hawk-ai" element={<ProtectedRoute><HawkAI /></ProtectedRoute>} />

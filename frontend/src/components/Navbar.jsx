@@ -30,15 +30,19 @@ function Navbar({ onLogoutClick }) {
         };
     }, [user?._id, user?.id]);
 
-    const linkClass = ({ isActive }) =>
-        isActive
-            ? "bg-red-50 text-red-700 font-semibold"
-            : "text-gray-600 hover:bg-gray-100 hover:text-gray-900";
+    const navPill = ({ isActive }) =>
+        `rounded-xl px-3 py-2 transition ${
+            isActive
+                ? "bg-red-50 text-red-700 font-semibold"
+                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+        }`;
 
-    const mobileLinkClass = ({ isActive }) =>
-        isActive
-            ? "block rounded-xl bg-red-50 px-4 py-3 text-red-700 font-semibold"
-            : "block rounded-xl px-4 py-3 text-gray-700 hover:bg-gray-100";
+    const mobilePill = ({ isActive }) =>
+        `block rounded-xl px-4 py-3 transition ${
+            isActive
+                ? "bg-red-50 text-red-700 font-semibold"
+                : "text-gray-700 hover:bg-gray-100"
+        }`;
 
     function closeMenu() {
         setOpen(false);
@@ -49,10 +53,70 @@ function Navbar({ onLogoutClick }) {
         onLogoutClick();
     }
 
+    function Avatar({ size = "sm" }) {
+        const sizeClass = size === "md" ? "h-10 w-10" : "h-9 w-9";
+
+        return user?.profileImage ? (
+            <img
+                src={user.profileImage}
+                alt={user.fullName}
+                className={`${sizeClass} rounded-full object-cover border`}
+            />
+        ) : (
+            <div
+                className={`${sizeClass} flex items-center justify-center rounded-full bg-red-100 font-bold text-red-700`}
+            >
+                {user?.fullName?.charAt(0)}
+            </div>
+        );
+    }
+
+    function NotificationLink({ mobile = false }) {
+        if (mobile) {
+            return (
+                <NavLink onClick={closeMenu} to="/notifications">
+                    {({ isActive }) => (
+                        <div
+                            className={`flex items-center justify-between rounded-xl px-4 py-3 transition ${
+                                isActive
+                                    ? "bg-red-50 text-red-700 font-semibold"
+                                    : "text-gray-700 hover:bg-gray-100"
+                            }`}
+                        >
+                            <span>Notifications</span>
+
+                            {unread > 0 && (
+                                <span className="rounded-full bg-red-700 px-2 py-0.5 text-xs text-white">
+                  {unread}
+                </span>
+                            )}
+                        </div>
+                    )}
+                </NavLink>
+            );
+        }
+
+        return (
+            <NavLink to="/notifications">
+                {({ isActive }) => (
+                    <span className={`relative ${navPill({ isActive })}`}>
+            Notifications
+
+                        {unread > 0 && (
+                            <span className="absolute -top-1 -right-1 rounded-full bg-red-700 px-1.5 py-0.5 text-xs text-white">
+                {unread}
+              </span>
+                        )}
+          </span>
+                )}
+            </NavLink>
+        );
+    }
+
     return (
         <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/90 backdrop-blur-md">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="flex h-18 items-center justify-between py-3">
+                <div className="flex min-h-[72px] items-center justify-between py-3">
                     <Link to="/" onClick={closeMenu} className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-700 text-white font-bold shadow-sm">
                             MS
@@ -69,75 +133,39 @@ function Navbar({ onLogoutClick }) {
                     </Link>
 
                     <div className="hidden items-center gap-2 md:flex">
-                        <NavLink to="/" className={linkClass}>
-                            {({ isActive }) => (
-                                <span className={`rounded-xl px-3 py-2 ${linkClass({ isActive })}`}>
-                  Home
-                </span>
-                            )}
+                        <NavLink to="/" className={navPill}>
+                            Home
                         </NavLink>
 
                         {user && (
                             <>
-                                <NavLink to="/jobs" className={linkClass}>
-                                    {({ isActive }) => (
-                                        <span className={`rounded-xl px-3 py-2 ${linkClass({ isActive })}`}>
-                      Jobs
-                    </span>
-                                    )}
+                                <NavLink to="/jobs" className={navPill}>
+                                    Jobs
                                 </NavLink>
 
-                                <NavLink to="/events" className={linkClass}>
-                                    {({ isActive }) => (
-                                        <span className={`rounded-xl px-3 py-2 ${linkClass({ isActive })}`}>
-                      Events
-                    </span>
-                                    )}
+                                <NavLink to="/events" className={navPill}>
+                                    Events
                                 </NavLink>
 
-                                <NavLink to="/community" className={linkClass}>
-                                    {({ isActive }) => (
-                                        <span className={`rounded-xl px-3 py-2 ${linkClass({ isActive })}`}>
-                      Community
-                    </span>
-                                    )}
+                                <NavLink to="/community" className={navPill}>
+                                    Community
                                 </NavLink>
 
-                                <NavLink to="/hawk-ai" className={linkClass}>
-                                    {({ isActive }) => (
-                                        <span className={`rounded-xl px-3 py-2 ${linkClass({ isActive })}`}>
-                      Hawk AI
-                    </span>
-                                    )}
+                                <NavLink to="/hawk-ai" className={navPill}>
+                                    Hawk AI
                                 </NavLink>
 
-                                <NavLink to="/notifications">
-                                    {({ isActive }) => (
-                                        <span
-                                            className={`relative rounded-xl px-3 py-2 ${
-                                                isActive
-                                                    ? "bg-red-50 text-red-700 font-semibold"
-                                                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                                            }`}
-                                        >
-                      Notifications
+                                <NotificationLink />
 
-                                            {unread > 0 && (
-                                                <span className="absolute -top-1 -right-1 rounded-full bg-red-700 px-1.5 py-0.5 text-xs text-white">
-                          {unread}
-                        </span>
-                                            )}
-                    </span>
-                                    )}
+                                <NavLink to="/profile" className={navPill}>
+                                    Profile
                                 </NavLink>
 
-                                <NavLink to="/profile" className={linkClass}>
-                                    {({ isActive }) => (
-                                        <span className={`rounded-xl px-3 py-2 ${linkClass({ isActive })}`}>
-                      Profile
-                    </span>
-                                    )}
-                                </NavLink>
+                                {user?.role === "admin" && (
+                                    <NavLink to="/admin" className={navPill}>
+                                        Admin
+                                    </NavLink>
+                                )}
                             </>
                         )}
                     </div>
@@ -146,29 +174,21 @@ function Navbar({ onLogoutClick }) {
                         {user ? (
                             <>
                                 <div className="flex items-center gap-3 rounded-2xl bg-gray-50 px-3 py-2">
-                                    {user.profileImage ? (
-                                        <img
-                                            src={user.profileImage}
-                                            alt={user.fullName}
-                                            className="h-9 w-9 rounded-full object-cover border"
-                                        />
-                                    ) : (
-                                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-100 text-sm font-bold text-red-700">
-                                            {user.fullName?.charAt(0)}
-                                        </div>
-                                    )}
+                                    <Avatar />
 
                                     <div className="leading-tight">
                                         <p className="text-sm font-semibold text-gray-900">
                                             {user.fullName?.split(" ")[0]}
                                         </p>
-                                        <p className="text-xs text-gray-500">Student</p>
+                                        <p className="text-xs text-gray-500">
+                                            {user.role === "admin" ? "Admin" : "Student"}
+                                        </p>
                                     </div>
                                 </div>
 
                                 <button
                                     onClick={handleLogoutClick}
-                                    className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-700"
+                                    className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-red-50 hover:text-red-700"
                                 >
                                     Logout
                                 </button>
@@ -177,14 +197,14 @@ function Navbar({ onLogoutClick }) {
                             <>
                                 <NavLink
                                     to="/login"
-                                    className="rounded-xl px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                                    className="rounded-xl px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
                                 >
                                     Login
                                 </NavLink>
 
                                 <NavLink
                                     to="/register"
-                                    className="rounded-xl bg-red-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-800"
+                                    className="rounded-xl bg-red-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-red-800"
                                 >
                                     Sign Up
                                 </NavLink>
@@ -204,51 +224,55 @@ function Navbar({ onLogoutClick }) {
             {open && (
                 <div className="border-t border-gray-200 bg-white px-4 py-4 md:hidden">
                     <div className="space-y-2">
-                        <NavLink onClick={closeMenu} to="/" className={mobileLinkClass}>
+                        <NavLink onClick={closeMenu} to="/" className={mobilePill}>
                             Home
                         </NavLink>
 
                         {user && (
                             <>
-                                <NavLink onClick={closeMenu} to="/jobs" className={mobileLinkClass}>
+                                <NavLink onClick={closeMenu} to="/jobs" className={mobilePill}>
                                     Jobs
                                 </NavLink>
 
-                                <NavLink onClick={closeMenu} to="/events" className={mobileLinkClass}>
+                                <NavLink onClick={closeMenu} to="/events" className={mobilePill}>
                                     Events
                                 </NavLink>
 
-                                <NavLink onClick={closeMenu} to="/community" className={mobileLinkClass}>
+                                <NavLink
+                                    onClick={closeMenu}
+                                    to="/community"
+                                    className={mobilePill}
+                                >
                                     Community
                                 </NavLink>
 
-                                <NavLink onClick={closeMenu} to="/hawk-ai" className={mobileLinkClass}>
+                                <NavLink
+                                    onClick={closeMenu}
+                                    to="/hawk-ai"
+                                    className={mobilePill}
+                                >
                                     Hawk AI
                                 </NavLink>
 
-                                <NavLink onClick={closeMenu} to="/notifications">
-                                    {({ isActive }) => (
-                                        <div
-                                            className={`flex items-center justify-between rounded-xl px-4 py-3 ${
-                                                isActive
-                                                    ? "bg-red-50 text-red-700 font-semibold"
-                                                    : "text-gray-700 hover:bg-gray-100"
-                                            }`}
-                                        >
-                                            <span>Notifications</span>
+                                <NotificationLink mobile />
 
-                                            {unread > 0 && (
-                                                <span className="rounded-full bg-red-700 px-2 py-0.5 text-xs text-white">
-                          {unread}
-                        </span>
-                                            )}
-                                        </div>
-                                    )}
-                                </NavLink>
-
-                                <NavLink onClick={closeMenu} to="/profile" className={mobileLinkClass}>
+                                <NavLink
+                                    onClick={closeMenu}
+                                    to="/profile"
+                                    className={mobilePill}
+                                >
                                     Profile
                                 </NavLink>
+
+                                {user?.role === "admin" && (
+                                    <NavLink
+                                        onClick={closeMenu}
+                                        to="/admin"
+                                        className={mobilePill}
+                                    >
+                                        Admin
+                                    </NavLink>
+                                )}
                             </>
                         )}
 
@@ -256,27 +280,19 @@ function Navbar({ onLogoutClick }) {
                             {user ? (
                                 <>
                                     <div className="mb-3 flex items-center gap-3 rounded-2xl bg-gray-50 p-3">
-                                        {user.profileImage ? (
-                                            <img
-                                                src={user.profileImage}
-                                                alt={user.fullName}
-                                                className="h-10 w-10 rounded-full object-cover border"
-                                            />
-                                        ) : (
-                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 font-bold text-red-700">
-                                                {user.fullName?.charAt(0)}
-                                            </div>
-                                        )}
+                                        <Avatar size="md" />
 
                                         <div>
-                                            <p className="font-semibold text-gray-900">{user.fullName}</p>
+                                            <p className="font-semibold text-gray-900">
+                                                {user.fullName}
+                                            </p>
                                             <p className="text-sm text-gray-500">{user.email}</p>
                                         </div>
                                     </div>
 
                                     <button
                                         onClick={handleLogoutClick}
-                                        className="w-full rounded-xl bg-red-700 px-4 py-3 font-medium text-white"
+                                        className="w-full rounded-xl bg-red-700 px-4 py-3 font-medium text-white transition hover:bg-red-800"
                                     >
                                         Logout
                                     </button>

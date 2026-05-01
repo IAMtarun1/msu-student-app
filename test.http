@@ -1,0 +1,14 @@
+POST http://localhost:5050/api/events
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWMwZDFmZmIwYTI1ZDI4MTM1MTEyMCIsImVtYWlsIjoidGFydW5AbW9udGNsYWlyLmVkdSIsImlhdCI6MTc3NzA4MDA2MywiZXhwIjoxNzc3Njg0ODYzfQ.NNM2Fk66lpA2Qcz92u_JbHtpDsNPNgTKu6LTwrv_eGQ
+
+{
+  "title": "CPT/OPT Information Session",
+  "date": "Feb 18",
+  "time": "2 PM - 3:30 PM",
+  "location": "CGCE Office",
+  "type": "visa",
+  "description": "Learn about CPT, OPT, F-1 rules, and employment authorization."
+}
+
+

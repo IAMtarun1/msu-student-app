@@ -9,6 +9,11 @@ const jobSchema = new mongoose.Schema(
         tags: [{ type: String }],
         pay: { type: String },
         description: { type: String },
+        applicationLink: {
+            type: String,
+            required: true,
+            trim: true,
+        },
     },
     { timestamps: true }
 );

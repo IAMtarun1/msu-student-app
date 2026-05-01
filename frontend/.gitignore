@@ -1,24 +1,134 @@
+# =========================
+# MSU Student App .gitignore
+# Full-stack React + Vite + Node + Express + MongoDB
+# =========================
+
+# -------------------------
+# Dependencies
+# -------------------------
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# -------------------------
+# Environment Variables / Secrets
+# -------------------------
+.env
+.env.*
+frontend/.env
+frontend/.env.*
+backend/.env
+backend/.env.*
+
+# -------------------------
+# Build Output
+# -------------------------
+dist/
+build/
+frontend/dist/
+frontend/build/
+backend/dist/
+backend/build/
+
+# -------------------------
 # Logs
-logs
+# -------------------------
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# -------------------------
+# OS Files
+# -------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# -------------------------
+# IDE / Editors
+# -------------------------
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# -------------------------
+# Testing / Coverage
+# -------------------------
+coverage/
+.nyc_output/
+
+# -------------------------
+# Cache / Temp
+# -------------------------
+.cache/
+.tmp/
+temp/
+*.tmp
+
+# -------------------------
+# Vite
+# -------------------------
+vite.config.timestamp-*
 *.local
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# -------------------------
+# Package Managers
+# -------------------------
+.pnpm-store/
+.yarn/
+.yarn-cache/
+package-lock.json.old
+yarn.lock.old
+
+# -------------------------
+# Mongo / Local DB Dumps
+# -------------------------
+*.bak
+*.dump
+*.archive
+
+# -------------------------
+# Uploaded Images / Local Assets (optional)
+# Uncomment if profile uploads are local-only
+# -------------------------
+# uploads/
+# public/uploads/
+# backend/uploads/
+
+# -------------------------
+# Deployment
+# -------------------------
+.vercel
+.render
+
+# -------------------------
+# Mac / Linux hidden
+# -------------------------
+*.swp
+*.swo
+
+# -------------------------
+# Runtime files
+# -------------------------
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# -------------------------
+# Sensitive configs
+# -------------------------
+firebase-adminsdk*.json
+serviceAccountKey.json
+google-credentials.json
+
+# -------------------------
+# Optional screenshots/videos (if large)
+# -------------------------
+# screenshots/raw/
+# demo-videos/

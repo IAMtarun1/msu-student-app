@@ -17,6 +17,9 @@ app.use(express.json());
 const jobRoutes = require("./routes/jobRoutes");
 app.use("/api/jobs", jobRoutes);
 
+const adminRoutes = require("./routes/adminRoutes");
+app.use("/api/admin", adminRoutes);
+
 app.get("/", (req, res) => {
     res.send("MSU Student App API is running");
 });

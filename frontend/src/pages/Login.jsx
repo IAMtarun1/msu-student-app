@@ -1,43 +1,41 @@
 import { useState } from "react";
-import API from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import API from "../utils/api";
 import { useAuth } from "../context/AuthContext";
+import { getErrorMessage } from "../utils/errorHandler";
 
 function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState(null);
+    const [form, setForm] = useState({
+        email: "",
+        password: "",
+    });
+
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
     const { login } = useAuth();
 
+    function handleChange(e) {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
+    }
+
     async function handleLogin(e) {
         e.preventDefault();
         setLoading(true);
-        setMessage(null);
 
         try {
-            const res = await API.post("/auth/login", {
-                email,
-                password,
-            });
+            const res = await API.post("/auth/login", form);
 
             login(res.data.user, res.data.token);
 
-            setMessage({
-                type: "success",
-                text: "Login successful! Redirecting to your dashboard...",
-            });
-
-            setTimeout(() => {
-                navigate("/");
-            }, 1000);
+            toast.success(`Welcome back, ${res.data.user.fullName.split(" ")[0]}!`);
+            navigate("/");
         } catch (error) {
-            setMessage({
-                type: "error",
-                text: error.response?.data?.message || "Login failed. Please try again.",
-            });
+            toast.error(getErrorMessage(error, "Login failed"));
         } finally {
             setLoading(false);
         }
@@ -48,25 +46,14 @@ function Login() {
             <h1 className="text-3xl font-bold mb-2">Welcome back</h1>
             <p className="text-gray-600 mb-6">Login with your MSU account.</p>
 
-            {message && (
-                <div
-                    className={`mb-5 rounded-xl px-4 py-3 text-sm font-medium ${
-                        message.type === "success"
-                            ? "bg-green-50 text-green-700 border border-green-200"
-                            : "bg-red-50 text-red-700 border border-red-200"
-                    }`}
-                >
-                    {message.text}
-                </div>
-            )}
-
             <form onSubmit={handleLogin} className="space-y-4">
                 <div>
                     <label className="text-sm text-gray-600">MSU Email</label>
                     <input
+                        name="email"
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={form.email}
+                        onChange={handleChange}
                         placeholder="yourname@montclair.edu"
                         className="mt-1 w-full border rounded-xl px-4 py-3"
                         required
@@ -76,9 +63,10 @@ function Login() {
                 <div>
                     <label className="text-sm text-gray-600">Password</label>
                     <input
+                        name="password"
                         type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={form.password}
+                        onChange={handleChange}
                         placeholder="Enter password"
                         className="mt-1 w-full border rounded-xl px-4 py-3"
                         required
@@ -86,10 +74,11 @@ function Login() {
                 </div>
 
                 <button
+                    type="submit"
                     disabled={loading}
-                    className="w-full bg-red-700 text-white py-3 rounded-xl font-medium disabled:opacity-60"
+                    className="w-full bg-red-700 text-white py-3 rounded-xl font-medium hover:bg-red-800 disabled:opacity-50"
                 >
-                    {loading ? "Logging in..." : "Login"}
+                    {loading ? "Signing in..." : "Login"}
                 </button>
             </form>
         </div>

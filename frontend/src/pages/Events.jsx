@@ -9,18 +9,18 @@ function Events() {
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function fetchEvents() {
-            try {
-                const res = await API.get("/events");
-                setEvents(res.data);
-            } catch (error) {
-                console.error("Error fetching events:", error);
-            } finally {
-                setLoading(false);
-            }
+    async function fetchEvents() {
+        try {
+            const res = await API.get("/events");
+            setEvents(res.data);
+        } catch (error) {
+            console.error("Error fetching events:", error);
+        } finally {
+            setLoading(false);
         }
+    }
 
+    useEffect(() => {
         fetchEvents();
     }, []);
 
@@ -75,7 +75,11 @@ function Events() {
                         .fill(0)
                         .map((_, i) => <SkeletonCard key={i} />)
                     : filteredEvents.map((event) => (
-                        <EventCard key={event._id || event.id} event={event} />
+                        <EventCard
+                            key={event._id || event.id}
+                            event={event}
+                            refreshEvents={fetchEvents}
+                        />
                     ))}
             </div>
         </div>

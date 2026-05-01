@@ -8,6 +8,12 @@ const eventSchema = new mongoose.Schema(
         location: { type: String, required: true },
         type: { type: String, required: true },
         description: { type: String },
+        rsvps: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
     },
     { timestamps: true }
 );

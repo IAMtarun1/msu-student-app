@@ -25,7 +25,11 @@ function JobCard({ job }) {
         </span>
             </div>
 
-            <button className="mt-4 w-full bg-red-700 text-white py-2 rounded-lg">
+            <button
+                onClick={() => window.open(job.applicationLink, "_blank")}
+                disabled={!job.applicationLink}
+                className="mt-4 w-full bg-red-700 text-white py-2 rounded-lg disabled:opacity-50 hover:bg-red-800"
+            >
                 Apply
             </button>
         </div>
